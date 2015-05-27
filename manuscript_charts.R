@@ -1,10 +1,7 @@
-# A script to generate the necessary charts for the eLife monthyl report. Takes
-# the output of manuscript_data.R and summary_data.R as input.
-###############################################################################
 library(ggplot2)
 
-sample_dates  <- format(seq(as.Date("2013-11-01"), as.Date("2014-10-31"), by = "month"), format = "%b %Y")
-poa_sample_dates <- format(seq(as.Date("2014-06-01"), as.Date("2014-10-31"), by = "month"), format = "%b %Y")
+sample_dates  <- format(seq(as.Date("2014-05-01"), as.Date("2015-04-30"), by = "month"), format = "%b %Y")
+poa_sample_dates <- format(seq(as.Date("2014-06-01"), as.Date("2015-04-30"), by = "month"), format = "%b %Y")
 
 # Define directort to import output of manuscript_data.R from
 root_dir  <- paste("~/Dropbox/R Projects/elife-monthly-stats/stats_", Sys.Date(), sep = "")
@@ -115,11 +112,11 @@ graphJ_data <- data.frame(date = factor(sample_dates, levels = sample_dates),
 # Graphing functions
 
 # A function to generate the boxplots Graphs A - F
-boxplot <- function(plot_data, title, x_label, y_label, n_labels, y_ticks) {
+boxplot <- function(plot_data, title, x_label, y_label, n_labels, y_ticks, y_limit) {
   plot <- ggplot(plot_data, aes_string(x = "date", y = "days")) +
     geom_boxplot() +
     theme_bw() +
-    scale_y_continuous(limits=c(0, max(plot_data[3]) + y_ticks), breaks=seq(0, max(plot_data[3]) + y_ticks, by = y_ticks)) +
+    scale_y_continuous(limits=c(0, as.numeric(y_limit + y_ticks)), breaks=seq(0, as.numeric(y_limit + y_ticks), by = y_ticks)) +
     labs(x = x_label, y = y_label) +
     ggtitle(title) +
     theme(axis.title.x = element_text(size = 20, vjust = -0.5, face = "bold"), 
@@ -134,7 +131,7 @@ boxplot <- function(plot_data, title, x_label, y_label, n_labels, y_ticks) {
     for (i in 1:length(labels)) {
       plot <- plot + annotate("text", 
                               x = i, 
-                              y = max(plot_data[3]) + y_ticks,
+                              y = y_limit + y_ticks,
                               size = 5,
                               label= paste("n =", labels[i]))
     }
@@ -218,7 +215,8 @@ graphA <- boxplot(plot_data = graphA_data,
                   x_label = "Month of Decision", 
                   y_label = "Days",
                   n_labels = TRUE,
-                  y_ticks = 2)
+                  y_ticks = 2,
+                  y_limit = max(graphA_data$days))
 png(paste(root_dir, "/charts/graphA-", Sys.Date(), ".png", sep = ""), width = out_width, height = out_height)
 graphA
 dev.off()
@@ -229,7 +227,8 @@ graphB <- boxplot(plot_data = graphB_data,
                   x_label = "Month of Decision", 
                   y_label = "Days",
                   n_labels = TRUE,
-                  y_ticks = 5)
+                  y_ticks = 5,
+                  y_limit = max(graphB_data$days))
 png(paste(root_dir, "/charts/graphB-", Sys.Date(), ".png", sep = ""), width = out_width, height = out_height)
 graphB
 dev.off()
@@ -240,7 +239,8 @@ graphC <- boxplot(plot_data = graphC_data,
                   x_label = "Month of Publication", 
                   y_label = "Days",
                   n_labels = TRUE,
-                  y_ticks = 5)
+                  y_ticks = 5,
+                  y_limit = max(graphC_data$days))
 png(paste(root_dir, "/charts/graphC-", Sys.Date(), ".png", sep = ""), width = out_width, height = out_height)
 graphC
 dev.off()
@@ -250,7 +250,8 @@ graphD <- boxplot(plot_data = graphD_data,
                   x_label = "Month of Publication", 
                   y_label = "Days",
                   n_labels = TRUE,
-                  y_ticks = 2)
+                  y_ticks = 2,
+                  y_limit = max(graphD_data$days))
 png(paste(root_dir, "/charts/graphD-", Sys.Date(), ".png", sep = ""), width = out_width, height = out_height)
 graphD
 dev.off()
@@ -260,7 +261,8 @@ graphE <- boxplot(plot_data = graphE_data,
                   x_label = "Month of Acceptance", 
                   y_label = "Days",
                   n_labels = TRUE,
-                  y_ticks = 20)
+                  y_ticks = 20,
+                  y_limit = 360)
 png(paste(root_dir, "/charts/graphE-", Sys.Date(), ".png", sep = ""), width = out_width, height = out_height)
 graphE
 dev.off()
@@ -270,7 +272,8 @@ graphF <- boxplot(plot_data = graphF_data,
                   x_label = "Month of Acceptance", 
                   y_label = "Days",
                   n_labels = TRUE,
-                  y_ticks = 20)
+                  y_ticks = 20,
+                  y_limit = 360)
 png(paste(root_dir, "/charts/graphF-", Sys.Date(), ".png", sep = ""), width = out_width, height = out_height)
 graphF
 dev.off()

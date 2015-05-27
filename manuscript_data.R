@@ -2,11 +2,8 @@
 # output a csv file with stats appended.
 
 # Import data
-raw_data <- read.csv("~/Dropbox/paper_history2014_11_10.csv")
+raw_data <- read.csv("~/Dropbox/paper_history2015_05_15.csv")
 editors <- read.csv("~/Dropbox/all_editors.csv")
-
-########## FILTER OUT ANY PAPER THAT IS NOT A SHORT REPORT OR RESEARACH ARTICLE ##########
-raw_data <- subset(raw_data, raw_data$type == "RA" | raw_data$type == "SR")
 
 # Find and record the date of acceptance and accepted revision for each manuscript
 raw_data$accept_dt <- ""
